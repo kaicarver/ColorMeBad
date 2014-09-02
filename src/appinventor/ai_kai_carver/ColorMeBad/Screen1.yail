@@ -1,0 +1,107 @@
+#|
+$Source $Yail
+|#
+
+(define-form appinventor.ai_kai_carver.ColorMeBad.Screen1 Screen1)
+(require <com.google.youngandroid.runtime>)
+
+(def (p$setThick $thickness)  (set-var! g$thickness (if (call-yail-primitive < (*list-for-runtime* (get-var g$thickness) 100) '(number number) "<") (call-yail-primitive + (*list-for-runtime* 1 (call-yail-primitive * (*list-for-runtime* 2 (get-var g$thickness) ) '(number number ) "*") ) '(number number ) "+") 1))(set-and-coerce-property! 'Canvas1 'LineWidth (get-var g$thickness) 'number)(set-and-coerce-property! 'Button5 'Text (call-yail-primitive string-append (*list-for-runtime* "Thik " (get-var g$thickness) ) '(text text ) "join") 'text))
+(def g$imageFileName "")
+(def g$thickness "1")
+(def (p$setColor $color)  (set-and-coerce-property! 'Canvas1 'PaintColor (lexical-value $color) 'number)(set-and-coerce-property! 'Button2 'TextColor (lexical-value $color) 'number))
+;;; Screen1
+
+(do-after-form-creation (set-and-coerce-property! 'Screen1 'AlignHorizontal 3 'number)
+ (set-and-coerce-property! 'Screen1 'Icon "ColorMeBad_icon.png" 'text)
+ (set-and-coerce-property! 'Screen1 'Scrollable #f 'boolean)
+ (set-and-coerce-property! 'Screen1 'Title "ColorMeBad \u756b\u6211\u58de\u58de" 'text)
+ (set-and-coerce-property! 'Screen1 'VersionCode 2 'number)
+ (set-and-coerce-property! 'Screen1 'VersionName "1.1" 'text)
+)
+
+;;; HorizontalArrangement1
+
+(add-component Screen1 HorizontalArrangement HorizontalArrangement1 
+)
+
+;;; Button1
+
+(add-component HorizontalArrangement1 Button Button1 
+(set-and-coerce-property! 'Button1 'FontSize 14 'number)
+
+(set-and-coerce-property! 'Button1 'Text "Foto" 'text)
+
+)
+
+(define-event Button1 Click()(set-this-form)
+    (call-component-method 'Camera1 'TakePicture (*list-for-runtime*) '()))
+;;; Button2
+
+(add-component HorizontalArrangement1 Button Button2 
+(set-and-coerce-property! 'Button2 'Text "Colorz" 'text)
+
+)
+
+(define-event Button2 Click()(set-this-form)
+    (if (call-yail-primitive yail-equal? (*list-for-runtime* (get-property 'Canvas1 'PaintColor) -65536) '(any any) "=") (begin   ((get-var p$setColor) -13421569)) (begin (if (call-yail-primitive yail-equal? (*list-for-runtime* (get-property 'Canvas1 'PaintColor) -13421569) '(any any) "=") (begin   ((get-var p$setColor) -16738048)) (begin (if (call-yail-primitive yail-equal? (*list-for-runtime* (get-property 'Canvas1 'PaintColor) -16738048) '(any any) "=") (begin   ((get-var p$setColor) -256)) (begin   ((get-var p$setColor) -65536))))))))
+;;; Button5
+
+(add-component HorizontalArrangement1 Button Button5 
+(set-and-coerce-property! 'Button5 'Text "Thik" 'text)
+
+)
+
+(define-event Button5 Click()(set-this-form)
+    ((get-var p$setThick) 5))
+;;; Button3
+
+(add-component HorizontalArrangement1 Button Button3 
+(set-and-coerce-property! 'Button3 'Text "P\u00f6st" 'text)
+
+)
+
+(define-event Button3 Click()(set-this-form)
+    (set-var! g$imageFileName (call-yail-primitive string-append (*list-for-runtime* "file://" (call-component-method 'Canvas1 'Save (*list-for-runtime*) '()) ) '(text text ) "join"))(call-component-method 'Sharing1 'ShareFile (*list-for-runtime* (get-var g$imageFileName)) '(text)))
+;;; Canvas1
+
+(add-component Screen1 Canvas Canvas1 
+(set-and-coerce-property! 'Canvas1 'Width -2 'number)
+
+(set-and-coerce-property! 'Canvas1 'Height -2 'number)
+
+)
+
+(define-event Canvas1 Dragged($startX $startY $prevX $prevY $currentX $currentY $draggedSprite)(set-this-form)
+    (call-component-method 'Canvas1 'DrawLine (*list-for-runtime* (lexical-value $prevX)  (lexical-value $prevY)  (lexical-value $currentX)  (lexical-value $currentY)) '(number number number number)))
+(define-event Canvas1 Touched($x $y $touchedSprite)(set-this-form)
+    (call-component-method 'Canvas1 'DrawCircle (*list-for-runtime* (lexical-value $x)  (lexical-value $y)  (call-yail-primitive / (*list-for-runtime* (get-var g$thickness) 2) '(number number) "/")) '(number number number)))
+;;; AccelerometerSensor1
+
+(add-component Screen1 AccelerometerSensor AccelerometerSensor1 
+)
+
+(define-event AccelerometerSensor1 Shaking()(set-this-form)
+    (call-component-method 'Canvas1 'Clear (*list-for-runtime*) '()))
+;;; Camera1
+
+(add-component Screen1 Camera Camera1 
+)
+
+(define-event Camera1 AfterPicture($image)(set-this-form)
+    (set-and-coerce-property! 'Canvas1 'BackgroundImage (lexical-value $image) 'text))
+;;; Web1
+
+(add-component Screen1 Web Web1 
+)
+
+;;; Notifier1
+
+(add-component Screen1 Notifier Notifier1 
+)
+
+;;; Sharing1
+
+(add-component Screen1 Sharing Sharing1 
+)
+
+(init-runtime)
